@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using TramWars.Persistence;
 
 namespace TramWars.Startup
 {
@@ -13,6 +15,10 @@ namespace TramWars.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            //TODO: figure a way to store production connection string in a secure way
+            var connection = @"Host=localhost;Username=postgres;Database=TramWars;";
+            services.AddDbContext<TramWarsContext>(o => o.UseNpgsql(connection));
         }
     }
 }

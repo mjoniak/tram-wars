@@ -4,7 +4,11 @@
     "debugType": "portable",
     "emitEntryPoint": true
   },
-  "dependencies": {},
+  "dependencies": {
+    "Microsoft.EntityFrameworkCore.Design": "1.0.1",
+    "Microsoft.EntityFrameworkCore.Tools": "1.0.0-preview3-final",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.1"
+  },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
@@ -17,5 +21,8 @@
       },
       "imports": "dnxcore50"
     }
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": "1.0.0-preview3-final"
   }
 }
