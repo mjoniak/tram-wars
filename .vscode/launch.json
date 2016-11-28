@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\bin\\Debug\\netcoreapp1.0\\tram-wars-server.dll",
+            "program": "${workspaceRoot}\\bin\\Debug\\netcoreapp1.1\\tram-wars.dll",
             "args": [],
             "cwd": "${workspaceRoot}",
             "externalConsole": false,
