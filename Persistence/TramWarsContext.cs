@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Persistence.Entities;
+using TramWars.Domain;
 
 namespace TramWars.Persistence
 {
@@ -7,6 +8,6 @@ namespace TramWars.Persistence
     {
         public TramWarsContext(DbContextOptions options) : base(options) {}
 
-        public DbSet<TestEntity> TestEntities { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using TramWars.Domain;
 using Xunit;
 
@@ -16,7 +17,8 @@ namespace TramWars.Tests.Domain
         public void CanAddPositionToRoute() 
         {
             Route route = new Route();
-            route.AddPosition(new Position());
+            route.AddPosition(new Position(50.0f, 20.0f));
+            Assert.Equal(1, route.Positions.Count());
         }
     }
 }

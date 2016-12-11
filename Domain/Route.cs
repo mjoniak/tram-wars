@@ -6,7 +6,9 @@ namespace TramWars.Domain
 {
     public class Route
     {
-        private List<Position> positions = new List<Position>();
+        public int Id { get; private set; }
+
+        private List<Position> positions = new List<Position>();        
         
         public IEnumerable<Position> Positions
         {
