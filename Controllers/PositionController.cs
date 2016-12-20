@@ -1,11 +1,11 @@
-using System;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
 using TramWars.Persistence.Repositories.Interfaces;
 
 namespace TramWars.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = "Bearer")]
     [Route("routes/{routeId}/positions")]
     public class PositionController : Controller
     {

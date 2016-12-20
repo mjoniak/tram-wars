@@ -10,8 +10,8 @@ namespace TramWars.Domain
 
         public int Id { get; private set; }
 
-        public float Lat { get; private set; }
+        public float Lat { get; }
 
-        public float Lng { get; private set; } 
+        public float Lng { get; }
     }
 }

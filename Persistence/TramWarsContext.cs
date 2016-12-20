@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Entities;
 using TramWars.Domain;
+using TramWars.Identity;
 
 namespace TramWars.Persistence
 {
-    public class TramWarsContext : DbContext
+    public class TramWarsContext : IdentityDbContext<ApplicationUser>
     {
         public TramWarsContext(DbContextOptions options) : base(options) {}
 

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
 using TramWars.Persistence.Repositories.Interfaces;
 
 namespace TramWars.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = "Bearer")]
     [Route("routes")]
     public class RouteController : Controller
     {
