@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
-using TramWars.Domain;
 using TramWars.DTO;
 using TramWars.Identity;
 using TramWars.Persistence.Repositories.Interfaces;
