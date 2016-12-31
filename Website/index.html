@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TramWars - Zarejestruj się!</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+        <link href="main.css" type="text/css" rel="stylesheet" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <form id="registration-form" class="col-md-2 col-md-offset-5">
+            <input name="username" placeholder="Użytkownik" class="form-control form-group" />
+            <input name="password" type="password" placeholder="Hasło" class="form-control form-group" />
+            <input name="password-repeat" type="password" placeholder="Powtórz hasło" class="form-control form-group" />
+            <button name="registration-submit" type="button" class="btn btn-primary form-group">Zarejestruj</button>
+        </form>
+
+        <script
+			  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+			  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+			  crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="application/ecmascript"></script>
+
+        <script type="application/ecmascript">
+            document.querySelector("button[name=registration-submit]").addEventListener("click", function() 
+            {
+                const alerts = document.querySelectorAll("div[role=alert]");
+                alerts.forEach(function(alert) {
+                    alert.parentNode.removeChild(alert);
+                });
+
+                const username = document.querySelector("input[name=username]").value;
+                const password = document.querySelector("input[name=password]").value;
+                const passwordRepeat = document.querySelector("input[name=password-repeat]").value;
+                const form = document.querySelector("#registration-form");
+
+                function printMessage(message, alertType) {
+                    form.insertAdjacentHTML("beforebegin", 
+                        "<div class=\"alert alert-" + alertType + "\" role=\"alert\">" + message + "</div>");
+                }
+
+                function validate(condition, message) 
+                {
+                    if (!condition) {
+                        printMessage(message, "danger");
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                const valid = validate(username, "Podaj nazwę użytkownika")
+                            & validate(password, "Podaj hasło") 
+                            & validate(password == passwordRepeat, "Hasła nie są jednakowe");
+                
+                if (valid) {
+                    const request = new XMLHttpRequest();
+                    request.open('POST', 'http://localhost:5000/users', true);
+                    request.setRequestHeader("Content-Type", "application/json");
+                    request.send(JSON.stringify({
+                        name: username,
+                        password: password
+                    }));
+                    request.onload = function() {
+                        if (request.status == 201) { 
+                            printMessage("Utworzono użytkownika.", "success")
+                        } else {
+                            printMessage("Wystąpił błąd.", "danger");
+                        }
+                    };
+                    request.onerror = function() { printMessage("Wystąpił błąd.", "danger"); };
+                }
+            });
+        </script>
+    </body>
+</html>
