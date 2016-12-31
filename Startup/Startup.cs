@@ -7,6 +7,9 @@ using TramWars.Persistence.Repositories;
 using Microsoft.Extensions.Logging;
 using TramWars.Persistence.Repositories.Interfaces;
 using TramWars.Identity;
+using TramWars.Services.Interfaces;
+using TramWars.Services;
+using TramWars.Tests.Persistence.Repositories;
 
 namespace TramWars.Startup
 {
@@ -41,9 +44,18 @@ namespace TramWars.Startup
                 .AllowPasswordFlow()
                 .DisableHttpsRequirement() // TODO: only for debug!
                 .AddEphemeralSigningKey(); // TODO: change for production
+
+            services.AddCors(o =>
+                o.AddPolicy("CorsPolicy", builder => 
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             
             services.AddTransient<IRouteRepository, RouteRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IStopRepository, StopRepository>();
+
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddTransient<IFile, StopsFile>();
         }
     }
 }

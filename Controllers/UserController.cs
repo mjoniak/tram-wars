@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
 using TramWars.DTO;
@@ -16,6 +17,7 @@ namespace TramWars.Controllers
             this.userRepository = userRepository;
         }
 
+        [EnableCors("CorsPolicy")]
         public IActionResult Post([FromBody] UserDTO userDTO)
         {
             var appUser = new ApplicationUser(userDTO.Name); 
