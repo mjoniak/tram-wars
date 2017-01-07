@@ -8,9 +8,10 @@ using TramWars.Persistence;
 namespace TramWars.Migrations
 {
     [DbContext(typeof(TramWarsContext))]
-    partial class TramWarsContextModelSnapshot : ModelSnapshot
+    [Migration("20170106232749_FixPosition")]
+    partial class FixPosition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -215,11 +216,7 @@ namespace TramWars.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Routes");
                 });
@@ -327,13 +324,6 @@ namespace TramWars.Migrations
                     b.HasOne("TramWars.Domain.Route")
                         .WithMany("Positions")
                         .HasForeignKey("RouteId");
-                });
-
-            modelBuilder.Entity("TramWars.Domain.Route", b =>
-                {
-                    b.HasOne("TramWars.Identity.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
         }
     }

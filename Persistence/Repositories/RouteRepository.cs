@@ -15,18 +15,12 @@ namespace TramWars.Persistence.Repositories
         public Route AddRoute(Route route)
         {
             context.Routes.Add(route);
-            context.SaveChanges();
             return route;
         }
 
         public Route Get(int id)
         {
             return context.Routes.Find(id);
-        }
-
-        public void SaveChanges()
-        {
-            context.SaveChanges();
         }
     }
 }

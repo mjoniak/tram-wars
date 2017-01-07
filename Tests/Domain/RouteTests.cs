@@ -9,14 +9,15 @@ namespace TramWars.Tests.Domain
         [Fact]
         public void NewRouteIsEmpty()
         {
-            Route route = new Route();
+            Route route = new Route(null);
             Assert.Empty(route.Positions);
         }
 
         [Fact]
-        public void CanAddPositionToRoute() 
+        public void CantAddSamePositionTwice() 
         {
-            Route route = new Route();
+            Route route = new Route(null);
+            route.AddPosition(new Position(50.0f, 20.0f));
             route.AddPosition(new Position(50.0f, 20.0f));
             Assert.Equal(1, route.Positions.Count());
         }

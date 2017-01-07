@@ -10,6 +10,7 @@ using TramWars.Identity;
 using TramWars.Services.Interfaces;
 using TramWars.Services;
 using TramWars.Tests.Persistence.Repositories;
+using System;
 
 namespace TramWars.Startup
 {
@@ -49,6 +50,7 @@ namespace TramWars.Startup
                 o.AddPolicy("CorsPolicy", builder => 
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             
+            services.AddTransient<Func<IUnitOfWork>>(x => () => x.GetService(typeof(TramWarsContext)) as IUnitOfWork);
             services.AddTransient<IRouteRepository, RouteRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IStopRepository, StopRepository>();

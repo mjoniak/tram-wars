@@ -1,6 +1,9 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
+using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
 
 namespace TramWars.Controllers
@@ -9,18 +12,26 @@ namespace TramWars.Controllers
     [Route("routes")]
     public class RouteController : Controller
     {
-        private readonly IRouteRepository repository;
+        private readonly IRouteRepository routeRepository;
+        private readonly IUserRepository userRepository;
+        private readonly Func<IUnitOfWork> uowFactory;
 
-        public RouteController(IRouteRepository repository)
+        public RouteController(IRouteRepository routeRepository, IUserRepository userRepository, Func<IUnitOfWork> uowFactory)
         {
-            this.repository = repository;
+            this.userRepository = userRepository;
+            this.routeRepository = routeRepository;
+            this.uowFactory = uowFactory;
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public async Task<IActionResult> Post()
         {
-            var route = new Route();
-            repository.AddRoute(route);
+            var user = await userRepository.GetUserAsync(User);
+            var route = new Route(user);
+            uowFactory.Do(() => 
+            {
+                routeRepository.AddRoute(route);
+            });
             return Created($"routes/{route.Id}", route);
         }
     }

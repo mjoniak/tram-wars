@@ -1,6 +1,8 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
+using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
 
 namespace TramWars.Controllers
@@ -9,10 +11,12 @@ namespace TramWars.Controllers
     [Route("routes/{routeId}/positions")]
     public class PositionController : Controller
     {
-        private IRouteRepository repository;
+        private readonly IRouteRepository repository;
+        private readonly Func<IUnitOfWork> uowFactory;
 
-        public PositionController(IRouteRepository repository)
+        public PositionController(IRouteRepository repository, Func<IUnitOfWork> uowFactory)
         {
+            this.uowFactory = uowFactory;
             this.repository = repository;
         }
 
@@ -20,8 +24,10 @@ namespace TramWars.Controllers
         public IActionResult Post(int routeId, [FromBody] Position position)
         {
             Route route = repository.Get(routeId);
-            route.AddPosition(position);
-            repository.SaveChanges();
+            uowFactory.Do(() => 
+            {
+                route.AddPosition(position);
+            });
             return Created($"routes/{routeId}/positions/{position.Id}", position);
         }
     }

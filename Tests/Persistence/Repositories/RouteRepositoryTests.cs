@@ -24,25 +24,17 @@ namespace TramWars.Tests.Persistence.Repositories
         [Fact]
         public void AddRouteAddsToContext() 
         {
-            repository.AddRoute(new Route());
+            repository.AddRoute(new Route(null));
             mockSet.Verify(p => p.Add(It.IsAny<Route>()), Times.Once);
-            mockContext.Verify(p => p.SaveChanges(), Times.Once);
         }
 
         [Fact]
         public void GetRouteFindsInContext()
         {
-            var routeInDb = new Route();
+            var routeInDb = new Route(null);
             mockSet.Setup(p => p.Find(123)).Returns(routeInDb);
             var returnedRoute = repository.Get(123);
             Assert.Same(returnedRoute, routeInDb);
-        }
-
-        [Fact]
-        public void SaveChangesSavesInContext()
-        {
-            repository.SaveChanges();
-            mockContext.Verify(p => p.SaveChanges(), Times.Once);
         }
     }
 }

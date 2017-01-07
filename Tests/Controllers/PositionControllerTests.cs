@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
 using TramWars.Domain;
+using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
 using Xunit;
 
@@ -12,12 +13,14 @@ namespace TramWars.Tests.Controllers
         PositionController controller;
         Route routeInDb;
         Mock<IRouteRepository> repositoryMock;
+        Mock<IUnitOfWork> uowMock;
 
         public PositionControllerTests()
         {
             repositoryMock = new Mock<IRouteRepository>();
-            controller = new PositionController(repositoryMock.Object);
-            routeInDb = new Route();            
+            uowMock = new Mock<IUnitOfWork>();
+            controller = new PositionController(repositoryMock.Object, () => uowMock.Object);
+            routeInDb = new Route(null);            
             repositoryMock.Setup(p => p.Get(1)).Returns(routeInDb);   
         }
 
@@ -32,12 +35,12 @@ namespace TramWars.Tests.Controllers
         }
 
         [Fact]
-        public void PostPositionSavesToRepository()
+        public void PostPositionCommitsUnitOfWork()
         {
             var position =  new Position(50.0f, 20.0f);
             controller.Post(1, position);
             Assert.Contains(position, routeInDb.Positions);
-            repositoryMock.Verify(p => p.SaveChanges());
+            uowMock.Verify(p => p.Commit());
         }
     }
 }

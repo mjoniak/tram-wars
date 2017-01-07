@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using TramWars.Identity;
 using TramWars.Persistence.Repositories.Interfaces;
@@ -25,6 +27,11 @@ namespace TramWars.Persistence.Repositories
             }
 
             return user;
+        }
+
+        public async Task<ApplicationUser> GetUserAsync(ClaimsPrincipal user)
+        {
+            return await userManager.GetUserAsync(user) as ApplicationUser;
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
 using TramWars.Domain;
+using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
 using Xunit;
 
@@ -10,26 +11,27 @@ namespace TramWars.Tests.Controllers
     public class RouteControllerTests
     {
         RouteController controller;
-        Mock<IRouteRepository> repository;
+        Mock<IRouteRepository> repositoryMock;
+        Mock<IUserRepository> userRepositoryMock;
 
         public RouteControllerTests()
         {
-            repository = new Mock<IRouteRepository>();
-            controller = new RouteController(repository.Object);
+            repositoryMock = new Mock<IRouteRepository>();
+            userRepositoryMock = new Mock<IUserRepository>();
+            controller = new RouteController(repositoryMock.Object, userRepositoryMock.Object, () => Mock.Of<IUnitOfWork>());
         }
 
         [Fact]
         public void PostRouteCreatesRouteInDb()
         {
-            repository.Setup(p => p.AddRoute(It.IsAny<Route>())).Verifiable();
-            controller.Post();
-            repository.Verify(p => p.AddRoute(It.IsAny<Route>()), Times.Once);
+            controller.Post().Wait();
+            repositoryMock.Verify(p => p.AddRoute(It.IsAny<Route>()), Times.Once);
         }
 
         [Fact]
         public void PostRouteReturnsRoute()
         {
-            var result = controller.Post() as CreatedResult;
+            var result = controller.Post().Result as CreatedResult;
             Assert.IsType<Route>(result.Value);
             Assert.Equal("routes/0", result.Location);
         }

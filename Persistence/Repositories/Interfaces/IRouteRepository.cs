@@ -7,7 +7,5 @@ namespace TramWars.Persistence.Repositories.Interfaces
         Route AddRoute(Route route);
 
         Route Get(int id);
-        
-        void SaveChanges();
     }
 }

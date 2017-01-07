@@ -1,12 +1,23 @@
 using System.Collections.Generic;
+using System.Linq;
+using TramWars.Identity;
 
 namespace TramWars.Domain
 {
     public class Route
     {
+        public Route(ApplicationUser user) 
+        {
+            User = user;
+        }
+
+        private Route() {}
+
         public int Id { get; private set; }
 
-        private List<Position> positions = new List<Position>();        
+        public ApplicationUser User { get; private set; }
+
+        private ICollection<Position> positions = new List<Position>();        
         
         public IEnumerable<Position> Positions
         {
@@ -15,7 +26,11 @@ namespace TramWars.Domain
 
         public void AddPosition(Position position)
         {
-            positions.Add(position);
+            var lastPosition = positions.OrderBy(x => x.Id).LastOrDefault();
+            if (position != lastPosition) 
+            {
+                positions.Add(position);
+            }
         }
     }
 }
