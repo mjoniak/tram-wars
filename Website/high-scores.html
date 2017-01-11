@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TramWars - Zarejestruj się!</title>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+        <link href="main.css" type="text/css" rel="stylesheet" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div class="container">
+            <nav class="navbar navbar-default">
+                <a class="navbar-brand" href="index.html">TramWars</a>                
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="high-scores.html">Wyniki</a></li>
+                </ul>
+            </nav>
+
+            <h1>Wyniki</h1>
+
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-11">
+                    <ol id="high-scores" class="list-group"></ol>
+                </div>
+            </div>
+        </div>
+
+        <script
+			  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+			  integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
+			  crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="application/ecmascript"></script>
+
+        <script type="application/ecmascript">
+            const request = new XMLHttpRequest();
+            request.open('GET', 'http://localhost:5000/scores/highest', true);
+            request.onload = function() {
+                const data = JSON.parse(request.response);
+                const list = document.querySelector("#high-scores");
+                data.forEach(function(item) 
+                { 
+                    const listItem = document.createElement("li");
+                    listItem.className = "list-group-item";
+                    const nameNode = document.createElement("strong");
+                    nameNode.appendChild(document.createTextNode(item.userName));
+                    listItem.appendChild(nameNode);
+                    const text = ": " + item.score + " punktów";
+                    listItem.appendChild(document.createTextNode(text));
+                    list.appendChild(listItem);
+                });
+            };
+            request.onerror = function() { alert("dupa") };
+            request.send();
+        </script>
+
+        <style>
+            .list-group-item {
+                display: list-item;
+            }
+        </style>
+    </body>
+</html>

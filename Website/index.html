@@ -7,12 +7,23 @@
         <meta charset="utf-8" />
     </head>
     <body>
-        <form id="registration-form" class="col-md-2 col-md-offset-5">
-            <input name="username" placeholder="Użytkownik" class="form-control form-group" />
-            <input name="password" type="password" placeholder="Hasło" class="form-control form-group" />
-            <input name="password-repeat" type="password" placeholder="Powtórz hasło" class="form-control form-group" />
-            <button name="registration-submit" type="button" class="btn btn-primary form-group">Zarejestruj</button>
-        </form>
+        <div class="container">
+            <nav class="navbar navbar-default">
+                <a class="navbar-brand active" href="index.html">TramWars</a>                
+                <ul class="nav navbar-nav">
+                    <li><a href="high-scores.html">Wyniki</a></li>
+                </ul>
+            </nav>
+
+            <h1>Rejestracja</h1>
+
+            <form id="registration-form" class="col-md-2 col-md-offset-5">
+                <input name="username" placeholder="Użytkownik" class="form-control form-group" />
+                <input name="password" type="password" placeholder="Hasło" class="form-control form-group" />
+                <input name="password-repeat" type="password" placeholder="Powtórz hasło" class="form-control form-group" />
+                <button name="registration-submit" type="button" class="btn btn-primary form-group">Zarejestruj</button>
+            </form>
+        </div>
 
         <script
 			  src="https://code.jquery.com/jquery-3.1.1.slim.min.js"

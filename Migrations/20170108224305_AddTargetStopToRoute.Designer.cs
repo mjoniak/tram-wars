@@ -8,9 +8,10 @@ using TramWars.Persistence;
 namespace TramWars.Migrations
 {
     [DbContext(typeof(TramWarsContext))]
-    partial class TramWarsContextModelSnapshot : ModelSnapshot
+    [Migration("20170108224305_AddTargetStopToRoute")]
+    partial class AddTargetStopToRoute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -215,12 +216,6 @@ namespace TramWars.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<float>("StartLat");
-
-                    b.Property<float>("StartLng");
-
-                    b.Property<string>("StartStopName");
-
                     b.Property<float>("TargetLat");
 
                     b.Property<float>("TargetLng");
@@ -266,8 +261,6 @@ namespace TramWars.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<int>("Score");
 
                     b.Property<string>("SecurityStamp");
 

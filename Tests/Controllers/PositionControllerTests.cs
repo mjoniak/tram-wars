@@ -4,6 +4,7 @@ using TramWars.Controllers;
 using TramWars.Domain;
 using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Tests.Helpers;
 using Xunit;
 
 namespace TramWars.Tests.Controllers
@@ -18,9 +19,10 @@ namespace TramWars.Tests.Controllers
         public PositionControllerTests()
         {
             repositoryMock = new Mock<IRouteRepository>();
+            var userRepositoryMock = new Mock<IUserRepository>();
             uowMock = new Mock<IUnitOfWork>();
-            controller = new PositionController(repositoryMock.Object, () => uowMock.Object);
-            routeInDb = new Route(null);            
+            controller = new PositionController(repositoryMock.Object,  userRepositoryMock.Object, () => uowMock.Object);
+            routeInDb = RouteFactory.CreateTestRoute();            
             repositoryMock.Setup(p => p.Get(1)).Returns(routeInDb);   
         }
 

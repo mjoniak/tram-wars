@@ -18,7 +18,7 @@ def load_stops(line_number, direction, line_ref):
             stop_node = stop_root.find("./node")
             lat, lon = stop_node.get("lat"), stop_node.get("lon")
             name = stop_node.find("./tag[@k='name']").get("v")
-            out.write(f"{name},{lat},{lon}\n")
+            out.write(f"{name},{lat},{lon},{stop_ref},{line_ref}\n")
 
 if __name__ == "__main__":
     for line in open("Scripts/stops.csv"):

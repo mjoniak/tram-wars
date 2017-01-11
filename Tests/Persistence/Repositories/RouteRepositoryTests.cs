@@ -3,6 +3,7 @@ using Moq;
 using TramWars.Domain;
 using TramWars.Persistence;
 using TramWars.Persistence.Repositories;
+using TramWars.Tests.Helpers;
 using Xunit;
 
 namespace TramWars.Tests.Persistence.Repositories
@@ -24,14 +25,14 @@ namespace TramWars.Tests.Persistence.Repositories
         [Fact]
         public void AddRouteAddsToContext() 
         {
-            repository.AddRoute(new Route(null));
+            repository.AddRoute(RouteFactory.CreateTestRoute());
             mockSet.Verify(p => p.Add(It.IsAny<Route>()), Times.Once);
         }
 
         [Fact]
         public void GetRouteFindsInContext()
         {
-            var routeInDb = new Route(null);
+            var routeInDb = RouteFactory.CreateTestRoute();
             mockSet.Setup(p => p.Find(123)).Returns(routeInDb);
             var returnedRoute = repository.Get(123);
             Assert.Same(returnedRoute, routeInDb);

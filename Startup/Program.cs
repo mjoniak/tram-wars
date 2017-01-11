@@ -8,7 +8,7 @@ namespace TramWars.Startup
         {
             // TODO: load ip from config
             var host = new WebHostBuilder()
-                .UseUrls("http://localhost:5000")
+                .UseUrls("http://192.168.0.11:5000", "http://localhost:5000")
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();

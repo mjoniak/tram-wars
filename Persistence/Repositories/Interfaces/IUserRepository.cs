@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TramWars.Identity;
@@ -8,5 +9,6 @@ namespace TramWars.Persistence.Repositories.Interfaces
     {
         ApplicationUser Add(ApplicationUser user, string password);
         Task<ApplicationUser> GetUserAsync(ClaimsPrincipal user);
+        IEnumerable<ApplicationUser> GetByTopScores(int n);
     }
 }

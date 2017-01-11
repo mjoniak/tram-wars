@@ -8,6 +8,8 @@ namespace TramWars.Domain
             this.Lng = lng;
         }
 
+        private Position() {}
+
         public int Id { get; private set; }
 
         public float Lat { get; private set; }

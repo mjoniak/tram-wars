@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -27,6 +28,14 @@ namespace TramWars.Persistence.Repositories
             }
 
             return user;
+        }
+
+        public IEnumerable<ApplicationUser> GetByTopScores(int n)
+        {
+            return userManager.Users
+                .Where(x => x.Score > 0)
+                .OrderBy(x => x.Score)
+                .Take(n).ToList();
         }
 
         public async Task<ApplicationUser> GetUserAsync(ClaimsPrincipal user)

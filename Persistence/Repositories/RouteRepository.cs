@@ -1,3 +1,5 @@
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TramWars.Domain;
 using TramWars.Persistence.Repositories.Interfaces;
 
@@ -20,7 +22,10 @@ namespace TramWars.Persistence.Repositories
 
         public Route Get(int id)
         {
-            return context.Routes.Find(id);
+            return context.Routes
+                .Include(x => x.Positions)
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.Id == id);
         }
     }
 }

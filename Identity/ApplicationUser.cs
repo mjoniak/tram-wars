@@ -10,5 +10,12 @@ namespace TramWars.Identity
 
         // for EF
         private ApplicationUser() {}
+
+        public int Score { get; private set; } = 0;
+
+        internal void AddScore(int points)
+        {
+            Score += points;
+        }
     }
 }

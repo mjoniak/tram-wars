@@ -22,6 +22,13 @@ namespace TramWars.Persistence.Repositories
             return lazyStops.Value;
         }
 
+        public Stop GetClosestStopNamed(string stopName, float lat, float lon)
+        {
+            return GetAll().Where(x => x.Name == stopName).ToList()
+                .OrderBy(x => Math.Abs(x.Latitude - lat) + Math.Abs(x.Longitude - lon))
+                .First();
+        }
+
         private static IEnumerable<Stop> ParseStops(IFile stopsFile)
         {
             var stopsDictionary = new Dictionary<string, List<Stop>>();
@@ -31,6 +38,7 @@ namespace TramWars.Persistence.Repositories
                 var name = fields[0];
                 var lat = float.Parse(fields[1], CultureInfo.InvariantCulture);
                 var lon = float.Parse(fields[2], CultureInfo.InvariantCulture);
+                var lineNumber = fields[4];
                 var stop = new Stop(name, lat, lon);
                 if (!stopsDictionary.ContainsKey(name)) 
                 {
@@ -38,9 +46,15 @@ namespace TramWars.Persistence.Repositories
                 }
 
                 var list = stopsDictionary[name];
-                if (list.All(p => AreDistinct(p, stop)))
+                var duplicate = list.FirstOrDefault(p => !AreDistinct(p, stop));
+                if (duplicate == null)
                 {
+                    stop.AddLine(lineNumber);
                     list.Add(stop);
+                }
+                else 
+                {
+                    duplicate.AddLine(lineNumber);
                 }
             }
             
