@@ -5,7 +5,7 @@ namespace TramWars.Domain
     public class Coords
     {
         private const float Radius = 6371000.0f;
-        private const float CloseDistanceMeters = 5.0f;
+        private const float CloseDistanceMeters = 80.0f;
 
         public float Lat { get; }
         public float Lng { get; }

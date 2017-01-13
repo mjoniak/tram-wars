@@ -19,9 +19,8 @@ namespace TramWars.Tests.Controllers
         public PositionControllerTests()
         {
             repositoryMock = new Mock<IRouteRepository>();
-            var userRepositoryMock = new Mock<IUserRepository>();
             uowMock = new Mock<IUnitOfWork>();
-            controller = new PositionController(repositoryMock.Object,  userRepositoryMock.Object, () => uowMock.Object);
+            controller = new PositionController(repositoryMock.Object, () => uowMock.Object);
             routeInDb = RouteFactory.CreateTestRoute();            
             repositoryMock.Setup(p => p.Get(1)).Returns(routeInDb);   
         }

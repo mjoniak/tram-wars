@@ -34,11 +34,13 @@ namespace TramWars.Domain
 
         public string StartStopName { get; private set; }
 
+        public bool IsClosed { get; private set; }
+
         public virtual ICollection<Position> Positions { get; set; }
 
         public bool IsFinished()
         {
-            if (Positions.Count() < 2) 
+            if (IsClosed || !Positions.Any()) 
             {
                 return false;
             }
@@ -80,6 +82,11 @@ namespace TramWars.Domain
         public Stop GetStartStop()
         {
             return new Stop(StartStopName, StartLat, StartLng);
+        }
+
+        public void Close() 
+        {
+            IsClosed = true;
         }
     }
 }
