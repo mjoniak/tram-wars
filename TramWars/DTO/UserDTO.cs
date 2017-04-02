@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace TramWars.DTO
+namespace TramWars.Dto
 {
-    public class UserDTO
+    public class UserDto
     {
         public string Name { get; set; }
 

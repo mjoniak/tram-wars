@@ -8,9 +8,10 @@ using TramWars.Persistence;
 namespace TramWars.Migrations
 {
     [DbContext(typeof(TramWarsContext))]
-    partial class TramWarsContextModelSnapshot : ModelSnapshot
+    [Migration("20170402145117_RestoreAuth")]
+    partial class RestoreAuth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)

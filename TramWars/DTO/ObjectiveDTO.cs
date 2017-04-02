@@ -1,8 +1,8 @@
-namespace TramWars.DTO
+namespace TramWars.Dto
 {
-    public class ObjectiveDTO
+    public class ObjectiveDto
     {
-        public StopDTO EndStop { get; set; }
+        public StopDto EndStop { get; set; }
 
         public int Points { get; set; }
     }

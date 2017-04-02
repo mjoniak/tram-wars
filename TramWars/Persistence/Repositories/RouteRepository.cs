@@ -7,22 +7,22 @@ namespace TramWars.Persistence.Repositories
 {
     public class RouteRepository : IRouteRepository
     {
-        private TramWarsContext context;
+        private readonly TramWarsContext _context;
 
         public RouteRepository(TramWarsContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public Route AddRoute(Route route)
         {
-            context.Routes.Add(route);
+            _context.Routes.Add(route);
             return route;
         }
 
         public Route Get(int id)
         {
-            return context.Routes
+            return _context.Routes
                 .Include(x => x.Positions)
                 .Include(x => x.User)
                 .FirstOrDefault(x => x.Id == id);

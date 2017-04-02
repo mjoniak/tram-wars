@@ -1,8 +1,9 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
 using TramWars.Domain;
-using TramWars.DTO;
+using TramWars.Dto;
 using TramWars.Persistence;
 using TramWars.Persistence.Repositories.Interfaces;
 using TramWars.Tests.Helpers;
@@ -12,34 +13,34 @@ namespace TramWars.Tests.Controllers
 {
     public class RouteControllerTests
     {
-        RouteController controller;
-        Mock<IRouteRepository> repositoryMock;
-        Mock<IUserRepository> userRepositoryMock;
-        StopDTO[] stopDTOs;
+        private readonly RouteController _controller;
+        private readonly Mock<IRouteRepository> _routeRepository;
+        private readonly StopDto[] _stopDtos;
 
         public RouteControllerTests()
         {
-            stopDTOs = new[] { new StopDTO(), new StopDTO() };
-            repositoryMock = new Mock<IRouteRepository>();
-            userRepositoryMock = new Mock<IUserRepository>();
-            var stopRepostitoryMock = new Mock<IStopRepository>();
-            stopRepostitoryMock.Setup(x => x.GetClosestStopNamed(It.IsAny<string>(), It.IsAny<float>(), It.IsAny<float>()))
+            _stopDtos = new[] { new StopDto(), new StopDto() };
+            _routeRepository = new Mock<IRouteRepository>();
+            var users = new Mock<IUsersFacade>();
+            var stopRepository = new Mock<IStopRepository>();
+            stopRepository.Setup(x => x.GetClosestStopNamed(It.IsAny<string>(), It.IsAny<float>(), It.IsAny<float>()))
                 .Returns(StopFactory.CreateTestStop());
-            controller = new RouteController(repositoryMock.Object, userRepositoryMock.Object, stopRepostitoryMock.Object, () => Mock.Of<IUnitOfWork>());
+            _controller = new RouteController(_routeRepository.Object, users.Object, stopRepository.Object, () => Mock.Of<IUnitOfWork>());
         }
 
         [Fact]
-        public void PostRouteCreatesRouteInDb()
+        public async Task PostRouteCreatesRouteInDb()
         {
-            controller.Post(stopDTOs).Wait();
-            repositoryMock.Verify(p => p.AddRoute(It.IsAny<Route>()), Times.Once);
+            await _controller.Post(_stopDtos);
+            _routeRepository.Verify(p => p.AddRoute(It.IsAny<Route>()), Times.Once);
         }
 
         [Fact]
-        public void PostRouteReturnsRoute()
+        public async Task PostRouteReturnsRoute()
         {
-            var result = controller.Post(stopDTOs).Result as CreatedResult;
-            Assert.IsType<Route>(result.Value);
+            var result = await _controller.Post(_stopDtos) as CreatedResult;
+            Assert.NotNull(result);
+            Assert.IsType<RouteDto>(result.Value);
             Assert.Equal("routes/0", result.Location);
         }
     }

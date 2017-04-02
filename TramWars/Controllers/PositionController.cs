@@ -11,22 +11,22 @@ namespace TramWars.Controllers
     [Route("routes/{routeId}/positions")]
     public class PositionController : Controller
     {
-        private readonly IRouteRepository repository;
-        private readonly Func<IUnitOfWork> uowFactory;
+        private readonly IRouteRepository _repository;
+        private readonly Func<IUnitOfWork> _uowFactory;
 
         public PositionController(
             IRouteRepository repository, 
             Func<IUnitOfWork> uowFactory)
         {
-            this.uowFactory = uowFactory;
-            this.repository = repository;
+            _uowFactory = uowFactory;
+            _repository = repository;
         }
 
         [HttpPost]
         public IActionResult Post(int routeId, [FromBody] Position position)
         {
-            var route = repository.Get(routeId);
-            uowFactory.Do(() =>
+            var route = _repository.Get(routeId);
+            _uowFactory.Do(() =>
             {
                 route.AddPosition(position);
                 if (route.IsFinished())

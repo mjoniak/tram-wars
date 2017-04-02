@@ -1,6 +1,6 @@
-namespace TramWars.DTO
+namespace TramWars.Dto
 {
-    public class RouteDTO
+    public class RouteDto
     {
         public int Id { get; set; }
     }

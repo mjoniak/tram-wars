@@ -1,32 +1,32 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
-using TramWars.DTO;
-using TramWars.Identity;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Dto;
 
 namespace TramWars.Controllers
 {
     [Route("users")]
     public class UserController : Controller
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUsersFacade _users;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUsersFacade users)
         {
-            this.userRepository = userRepository;
+            _users = users;
         }
 
         [EnableCors("CorsPolicy")]
-        public IActionResult Post([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Post([FromBody] UserDto userDto)
         {
-            var appUser = new ApplicationUser(userDTO.Name); 
-            var savedUser = userRepository.Add(appUser, userDTO.Password);
-            var result = new UserDTO
+            var appUser = new AppUser(userDto.Name);
+            var result = await _users.CreateAsync(appUser, userDto.Password);
+            if (!result.Succeeded)
             {
-                Name = savedUser.UserName
-            };
-            return Created($"/users/{savedUser.UserName}", result);
+                return BadRequest(result.Errors);
+            }
+
+            return Created($"/users/{appUser.UserName}", result);
         }
     }
 }

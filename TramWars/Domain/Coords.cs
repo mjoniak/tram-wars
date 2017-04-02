@@ -22,9 +22,9 @@ namespace TramWars.Domain
              * Haversine formula
              */
 
-             double phi1 = Radians(this.Lat);
+             double phi1 = Radians(Lat);
              double phi2 = Radians(that.Lat);
-             double lambda1 = Radians(this.Lng);
+             double lambda1 = Radians(Lng);
              double lambda2 = Radians(that.Lng);
 
              double sin1 = Math.Sin((phi2 - phi1) / 2);

@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TramWars.Services.Interfaces;
 
 namespace TramWars.Domain
 {
-    public class ObjectiveGenerator : IObjectiveService
+    public class ObjectiveGenerator
     {
         private const int MaxObjectivesPerStop = 10;
         private const float SwitchProbability = 0.33f;
-        private readonly IEnumerable<Stop> stops;
+        private readonly IEnumerable<Stop> _stops;
 
         public ObjectiveGenerator(IEnumerable<Stop> stops)
         {
-            this.stops = stops;
+            _stops = stops;
         }
 
         public IEnumerable<Objective> Generate(Stop startStop)
@@ -39,7 +38,7 @@ namespace TramWars.Domain
             int seed = (DateTime.Today - DateTime.MinValue).Seconds;
             var rand = new Random(seed);
 
-            var stop = stops
+            var stop = _stops
                 .Where(x => x != startStop && x.HasCommonLinesWith(startStop) && !visitedStops.Contains(x))
                 .OrderBy(x => rand.Next())
                 .FirstOrDefault();

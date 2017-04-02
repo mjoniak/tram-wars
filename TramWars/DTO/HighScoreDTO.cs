@@ -1,6 +1,6 @@
-namespace TramWars.DTO
+namespace TramWars.Dto
 {
-    public class HighScoreDTO
+    public class HighScoreDto
     {
         public int Score { get; set; }
 

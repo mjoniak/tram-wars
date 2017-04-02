@@ -4,22 +4,21 @@ using System.Globalization;
 using System.Linq;
 using TramWars.Domain;
 using TramWars.Persistence.Repositories.Interfaces;
-using TramWars.Persistence.Repositories;
 
 namespace TramWars.Persistence.Repositories
 {
     public class StopRepository : IStopRepository
     {
-        private readonly Lazy<IEnumerable<Stop>> lazyStops;
+        private readonly Lazy<IEnumerable<Stop>> _lazyStops;
 
         public StopRepository(IFile stopsFile)
         {
-            this.lazyStops = new Lazy<IEnumerable<Stop>>(() => ParseStops(stopsFile));
+            _lazyStops = new Lazy<IEnumerable<Stop>>(() => ParseStops(stopsFile));
         }
 
         public IEnumerable<Stop> GetAll()
         {   
-            return lazyStops.Value;
+            return _lazyStops.Value;
         }
 
         public Stop GetClosestStopNamed(string stopName, float lat, float lon)

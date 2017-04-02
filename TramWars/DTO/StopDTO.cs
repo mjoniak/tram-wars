@@ -1,6 +1,6 @@
-namespace TramWars.DTO
+namespace TramWars.Dto
 {
-    public class StopDTO
+    public class StopDto
     {
         public string Name { get; set; }
         public float Lat { get; set; }

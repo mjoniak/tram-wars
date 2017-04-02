@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
 using TramWars.Domain;
-using TramWars.DTO;
+using TramWars.Dto;
 using TramWars.Persistence.Repositories.Interfaces;
 using Xunit;
 
@@ -19,8 +19,9 @@ namespace TramWars.Tests.Controllers
             var controller = new StopsController(stopRepositoryMock.Object);
             
             var result = controller.Get() as OkObjectResult;
-            var stops = result.Value as IEnumerable<StopDTO>;
-            
+
+            Assert.NotNull(result);
+            var stops = result.Value as IEnumerable<StopDto>;
             Assert.NotNull(stops);
             Assert.Collection(stops, p => {
                 Assert.Equal("Test Stop", p.Name);

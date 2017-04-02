@@ -10,32 +10,22 @@ namespace TramWars.Tests.Persistence.Repositories
 {
     public class RouteRepositoryTests
     {
-        Mock<DbSet<Route>> mockSet;
-        Mock<TramWarsContext> mockContext;
-        RouteRepository repository;
+        private readonly Mock<DbSet<Route>> _dbSet;
+        private readonly RouteRepository _repository;
 
         public RouteRepositoryTests()
         {
-            mockSet = new Mock<DbSet<Route>>();
-            mockContext = new Mock<TramWarsContext>(new DbContextOptionsBuilder().Options);
-            mockContext.Setup(p => p.Routes).Returns(mockSet.Object);
-            repository = new RouteRepository(mockContext.Object);
+            _dbSet = new Mock<DbSet<Route>>();
+            var context = new Mock<TramWarsContext>(new DbContextOptionsBuilder().Options);
+            context.Setup(p => p.Routes).Returns(_dbSet.Object);
+            _repository = new RouteRepository(context.Object);
         }
 
         [Fact]
         public void AddRouteAddsToContext() 
         {
-            repository.AddRoute(RouteFactory.CreateTestRoute());
-            mockSet.Verify(p => p.Add(It.IsAny<Route>()), Times.Once);
-        }
-
-        [Fact]
-        public void GetRouteFindsInContext()
-        {
-            var routeInDb = RouteFactory.CreateTestRoute();
-            mockSet.Setup(p => p.Find(123)).Returns(routeInDb);
-            var returnedRoute = repository.Get(123);
-            Assert.Same(returnedRoute, routeInDb);
+            _repository.AddRoute(RouteFactory.CreateTestRoute());
+            _dbSet.Verify(p => p.Add(It.IsAny<Route>()), Times.Once);
         }
     }
 }

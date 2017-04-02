@@ -1,27 +1,28 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TramWars.DTO;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Domain;
+using TramWars.Dto;
 
 namespace TramWars.Controllers
 {
     public class ScoreController : Controller
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUsersFacade _users;
 
-        public ScoreController(IUserRepository userRepository)
+        public ScoreController(IUsersFacade users)
         {
-            this.userRepository = userRepository;
+            _users = users;
         }
 
         [EnableCors("CorsPolicy")]
         [Route("scores/highest")]
         [HttpGet]
-        public ActionResult GetHighScores()
+        public async Task<ActionResult> GetHighScores()
         {
-            var highestScoringUsers = userRepository.GetByTopScores(10);
-            var dtos = highestScoringUsers.Select(x => new HighScoreDTO 
+            var highestScoringUsers = await _users.GetByTopScoresAsync(10);
+            var dtos = highestScoringUsers.Select(x => new HighScoreDto
             {
                 UserName = x.UserName,
                 Score = x.Score

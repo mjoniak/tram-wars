@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TramWars.Domain;
-using TramWars.Identity;
 
 namespace TramWars.Persistence
 {
-    public class TramWarsContext : IdentityDbContext<ApplicationUser>, IUnitOfWork
+    public class TramWarsContext : 
+        IdentityDbContext<AppUser, IdentityRole<int>, int>, 
+        IUnitOfWork
     {
         public TramWarsContext(DbContextOptions options) : base(options) {}
 
@@ -19,7 +20,7 @@ namespace TramWars.Persistence
 
         void IUnitOfWork.Rollback()
         {
-            var entries = ChangeTracker.Entries();
+            var entries = ChangeTracker.Entries().ToList();
             entries.Where(x => x.State == EntityState.Modified).ToList().ForEach(x => 
             {
                 x.CurrentValues.SetValues(x.OriginalValues);

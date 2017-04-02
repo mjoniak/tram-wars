@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using TramWars.Identity;
 
 namespace TramWars.Domain
 {
     public class Route
     {
-        public Route(ApplicationUser user, Stop targetStop, Stop startStop) : this()
+        public Route(AppUser user, Stop targetStop, Stop startStop) : this()
         {
             User = user;
             SetTargetStop(targetStop);
@@ -20,7 +19,7 @@ namespace TramWars.Domain
 
         public int Id { get; private set; }
 
-        public ApplicationUser User { get; private set; }
+        public AppUser User { get; private set; }
 
         public float TargetLat { get; private set; }
 

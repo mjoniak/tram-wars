@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TramWars.Controllers;
-using TramWars.DTO;
-using TramWars.Identity;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Domain;
+using TramWars.Dto;
 using Xunit;
 
 namespace TramWars.Tests.Controllers
@@ -12,40 +13,39 @@ namespace TramWars.Tests.Controllers
     {
         private const string UserName = "user_name123";
         private const string Password = "pass123";
-        private UserDTO dto;
-        private Mock<IUserRepository> repositoryMock;
-        private UserController controller;
+        private readonly UserDto _dto;
+        private readonly Mock<IUsersFacade> _users;
+        private readonly UserController _controller;
 
         public UserControllerTests()
         {
-            dto = new UserDTO 
-            {  
+            _dto = new UserDto
+            {
                 Name = UserName,
                 Password = Password
             };
-            var user = new ApplicationUser(UserName);
-            repositoryMock = new Mock<IUserRepository>(); 
-            repositoryMock
-                .Setup(p => p.Add(It.Is<ApplicationUser>(u => u.UserName == UserName), Password))
-                .Returns(user)
+            _users = new Mock<IUsersFacade>();
+            _users
+                .Setup(p => p.CreateAsync(It.Is<AppUser>(u => u.UserName == UserName), Password))
+                .ReturnsAsync(IdentityResult.Success)
                 .Verifiable();
-            controller = new UserController(repositoryMock.Object);
+            _controller = new UserController(_users.Object);
         }
 
         [Fact]
-        public void WhenAllFieldsPresentPostUserReturnsUser()
+        public async Task WhenAllFieldsPresentPostUserReturnsUser()
         {
-            var result = controller.Post(dto) as CreatedResult;
-            var returnedUser = result.Value as UserDTO;
-            Assert.Equal(UserName, returnedUser.Name);
-            Assert.Null(returnedUser.Password);
+            var result = await _controller.Post(_dto) as CreatedResult;
+
+            Assert.NotNull(result);
+            Assert.Equal($"/users/{UserName}", result.Location);
         }
 
         [Fact]
-        public void WhenAllFieldsPresentPostUserCreatesUser()
+        public async Task WhenAllFieldsPresentPostUserCreatesUser()
         {
-            controller.Post(dto);
-            repositoryMock.Verify();
+            await _controller.Post(_dto);
+            _users.Verify();
         }
     }
 }
