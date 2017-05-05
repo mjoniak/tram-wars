@@ -6,7 +6,7 @@ using TramWars.Persistence;
 
 namespace TramWars.Migrations
 {
-    [DbContext(typeof(TramWarsContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20161207204748_AddRoute")]
     partial class AddRoute
     {

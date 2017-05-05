@@ -1,15 +1,21 @@
+using System;
+
 namespace TramWars.Domain
 {
     public class Position
     {
+        private const double Tolerance = 1e-5;
+
         public Position(float lat, float lng)
         {
-            this.Lat = lat;
-            this.Lng = lng;
+            Lat = lat;
+            Lng = lng;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private Position() {}
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         public int Id { get; private set; }
 
         public float Lat { get; private set; }
@@ -28,7 +34,7 @@ namespace TramWars.Domain
                 return false;
             }
 
-            return left.Lat == right.Lat && left.Lng == right.Lng;
+            return Math.Abs(left.Lat - right.Lat) < Tolerance && Math.Abs(left.Lng - right.Lng) < Tolerance;
         }
 
         public static bool operator !=(Position left, Position right) 

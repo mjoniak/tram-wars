@@ -7,7 +7,7 @@ using TramWars.Persistence;
 
 namespace TramWars.Migrations
 {
-    [DbContext(typeof(TramWarsContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20170402113543_RemoveAuth")]
     partial class RemoveAuth
     {

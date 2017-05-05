@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using TramWars.Persistence;
-using TramWars.Persistence.Repositories;
 using Microsoft.Extensions.Logging;
-using TramWars.Persistence.Repositories.Interfaces;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +14,11 @@ namespace TramWars.Startup
 {
     public class Startup
     {
+        public Startup(IHostingEnvironment env)
+        {
+            Config.Init(env.IsDevelopment());
+        }
+        
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             app.UseIdentity();
@@ -26,7 +29,7 @@ namespace TramWars.Startup
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
-                Authority = "http://192.168.2.154:5000/", //TODO: configuration
+                Authority = Config.ListenUrl,
                 Audience = "resource-server", //TODO: make this a const
                 RequireHttpsMetadata = false, //TODO: fix that
                 TokenValidationParameters = new TokenValidationParameters
@@ -45,15 +48,14 @@ namespace TramWars.Startup
         {
             services.AddMvc();
             //TODO: figure a way to store production connection string in a secure way
-            var connection = @"Host=localhost;Username=postgres;Password=postgres;Database=TramWars;";
-            services.AddDbContext<TramWarsContext>(o =>
+            services.AddDbContext<AppDbContext>(o =>
             {
-                o.UseNpgsql(connection);
+                o.UseNpgsql(Config.ConnectionString);
                 o.UseOpenIddict();
             });
 
             services.AddIdentity<AppUser, IdentityRole<int>>()
-                .AddEntityFrameworkStores<TramWarsContext, int>()
+                .AddEntityFrameworkStores<AppDbContext, int>()
                 .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
@@ -65,7 +67,7 @@ namespace TramWars.Startup
 
             services.AddOpenIddict(o =>
             {
-                o.AddEntityFrameworkCoreStores<TramWarsContext>();
+                o.AddEntityFrameworkCoreStores<AppDbContext>();
                 o.AddMvcBinders();
                 o.EnableTokenEndpoint("/connect/token");
                 o.AllowPasswordFlow();
@@ -78,13 +80,6 @@ namespace TramWars.Startup
             services.AddCors(o =>
                 o.AddPolicy("CorsPolicy", builder => 
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
-            
-            services.AddTransient<Func<IUnitOfWork>>(x => () => x.GetService(typeof(TramWarsContext)) as IUnitOfWork);
-            services.AddTransient<IRouteRepository, RouteRepository>();
-            //services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IStopRepository, StopRepository>();
-
-            services.AddTransient<IFile, StopsFile>();
         }
     }
 }

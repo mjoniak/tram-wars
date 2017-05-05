@@ -14,11 +14,11 @@ namespace TramWars.Domain
         Task<IEnumerable<AppUser>> GetByTopScoresAsync(int count);
     }
 
-    public class UsersesFacade : IUsersFacade
+    public class UsersFacade : IUsersFacade
     {
         private readonly UserManager<AppUser> _manager;
 
-        public UsersesFacade(UserManager<AppUser> manager) => _manager = manager;
+        public UsersFacade(UserManager<AppUser> manager) => _manager = manager;
 
         public Task<IdentityResult> CreateAsync(AppUser user, string password) => _manager.CreateAsync(user, password);
         public Task<AppUser> GetUserAsync(ClaimsPrincipal principal) => _manager.GetUserAsync(principal);

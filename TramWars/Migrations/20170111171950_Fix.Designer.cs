@@ -7,7 +7,7 @@ using TramWars.Persistence;
 
 namespace TramWars.Migrations
 {
-    [DbContext(typeof(TramWarsContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20170111171950_Fix")]
     partial class Fix
     {

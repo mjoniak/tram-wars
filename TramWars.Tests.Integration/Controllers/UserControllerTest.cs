@@ -7,9 +7,9 @@ using TramWars.Domain;
 using TramWars.Dto;
 using Xunit;
 
-namespace TramWars.Tests.Controllers
+namespace TramWars.Tests.Integration.Controllers
 {
-    public class UserControllerTests
+    public class UserControllerTest
     {
         private const string UserName = "user_name123";
         private const string Password = "pass123";
@@ -17,7 +17,7 @@ namespace TramWars.Tests.Controllers
         private readonly Mock<IUsersFacade> _users;
         private readonly UserController _controller;
 
-        public UserControllerTests()
+        public UserControllerTest()
         {
             _dto = new UserDto
             {

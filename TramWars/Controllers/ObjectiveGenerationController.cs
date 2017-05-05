@@ -3,24 +3,28 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
 using TramWars.Dto;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Persistence;
+using TramWars.Queries;
 
 namespace TramWars.Controllers
 {
     [Authorize(ActiveAuthenticationSchemes = "Bearer")]
     public class ObjectiveGenerationController : Controller
     {
-        private readonly IStopRepository _stopRepository;
-        public ObjectiveGenerationController(IStopRepository stopRepository)
+        private readonly AppDbContext _dbContext;
+        private readonly FindStopQuery _findStopQuery;
+
+        public ObjectiveGenerationController(AppDbContext dbContext, FindStopQuery findStopQuery)
         {
-            _stopRepository = stopRepository;
+            _dbContext = dbContext;
+            _findStopQuery = findStopQuery;
         }
 
         [Route("stops/{stopName},{lat},{lon}/objectives")]
         public ActionResult Get(string stopName, float lat, float lon)
         {
-            var stops = _stopRepository.GetAll();
-            var startStop = _stopRepository.GetClosestStopNamed(stopName, lat, lon);
+            var stops = _dbContext.Stops.ToList();
+            var startStop = _findStopQuery.Find(stopName, lat, lon);
             var generator = new ObjectiveGenerator(stops);
             var objectives = generator.Generate(startStop);
             return Ok(objectives.Select(x => new ObjectiveDto

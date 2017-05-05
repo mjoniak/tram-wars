@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Dto;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Persistence;
 
 namespace TramWars.Controllers
 {
@@ -10,16 +10,16 @@ namespace TramWars.Controllers
     [Route("stops")]
     public class StopsController : Controller
     {
-        private readonly IStopRepository _repository;
+        private readonly AppDbContext _dbContext;
 
-        public StopsController(IStopRepository repository)
+        public StopsController(AppDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public IActionResult Get()
         {
-            var dtos = _repository.GetAll().Select(p => new StopDto
+            var dtos = _dbContext.Stops.Select(p => new StopDto
             {
                 Name = p.Name,
                 Lat = p.Latitude,

@@ -5,16 +5,12 @@ namespace TramWars.Domain
 {
     public class Stop
     {
-        private readonly ICollection<string> lines = new List<string>();
-
-        public string Name { get; }
-        public float Latitude { get; }
-        public float Longitude { get; }
-
-        public IEnumerable<string> GetLines()
-        {
-            return lines;
-        }
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public float Latitude { get; private set; }
+        public float Longitude { get; private set; }
+        public ICollection<Service> Lines { get; private set; }
 
         public double DistanceTo(Stop that)
         {
@@ -23,21 +19,34 @@ namespace TramWars.Domain
             return thisCoords.DistanceTo(thatCoords);
         }
 
-        public Stop(string name, float latitude, float longitude)
+        private Stop()
         {
-            this.Name = name;
-            this.Latitude = latitude;
-            this.Longitude = longitude;
+            Lines = new List<Service>();
+        }
+
+        public Stop(string name, float latitude, float longitude) : this()
+        {
+            Name = name;
+            Latitude = latitude;
+            Longitude = longitude;
         }
 
         public bool HasCommonLinesWith(Stop startStop)
         {
-            return lines.Intersect(startStop.lines).Any();
+            return Lines
+                .Select(x => x.Name)
+                .Intersect(startStop.Lines.Select(y => y.Name))
+                .Any();
         }
 
-        public void AddLine(string lineNumber)
+        public void AddService(Service service)
         {
-            lines.Add(lineNumber);
+            Lines.Add(service);
+        }
+
+        public Coords GetCoords()
+        {
+            return new Coords(Latitude, Longitude);
         }
     }
 }

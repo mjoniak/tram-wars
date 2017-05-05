@@ -1,9 +1,9 @@
-using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TramWars.Domain;
 using TramWars.Persistence;
-using TramWars.Persistence.Repositories.Interfaces;
 
 namespace TramWars.Controllers
 {
@@ -11,32 +11,31 @@ namespace TramWars.Controllers
     [Route("routes/{routeId}/positions")]
     public class PositionController : Controller
     {
-        private readonly IRouteRepository _repository;
-        private readonly Func<IUnitOfWork> _uowFactory;
+        private readonly AppDbContext _dbContext;
 
-        public PositionController(
-            IRouteRepository repository, 
-            Func<IUnitOfWork> uowFactory)
+        public PositionController(AppDbContext dbContext)
         {
-            _uowFactory = uowFactory;
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
-        public IActionResult Post(int routeId, [FromBody] Position position)
+        public async Task<IActionResult> Post(int routeId, [FromBody] Position position)
         {
-            var route = _repository.Get(routeId);
-            _uowFactory.Do(() =>
+            // TODO: check if authorized to access route
+            var route = await _dbContext.Routes
+                .Include(x => x.Positions)
+                .Include(x => x.User)
+                .SingleAsync(x => x.Id == routeId);
+            route.AddPosition(position);
+            if (route.IsFinished())
             {
-                route.AddPosition(position);
-                if (route.IsFinished())
-                {
-                    var user = route.User;
-                    var objective = new Objective(route.GetStartStop(), route.GetTargetStop());
-                    user.AddScore(objective.CalculatePoints());
-                    route.Close();
-                }
-            });
+                var user = route.User;
+                var objective = new Objective(route.StartStop, route.TargetStop);
+                user.AddScore(objective.CalculatePoints());
+                route.Close();
+            }
+
+            await _dbContext.SaveChangesAsync();
             return Created($"routes/{routeId}/positions/{position.Id}", position);
         }
     }

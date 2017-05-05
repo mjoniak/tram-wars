@@ -7,10 +7,11 @@ using TramWars.Persistence;
 
 namespace TramWars.Migrations
 {
-    [DbContext(typeof(TramWarsContext))]
-    partial class TramWarsContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20170505155132_MoveStopsToDb")]
+    partial class MoveStopsToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
@@ -274,25 +275,53 @@ namespace TramWars.Migrations
 
                     b.Property<bool>("IsClosed");
 
-                    b.Property<float>("StartLat");
+                    b.Property<int?>("StartStopId");
 
-                    b.Property<float>("StartLng");
-
-                    b.Property<string>("StartStopName");
-
-                    b.Property<float>("TargetLat");
-
-                    b.Property<float>("TargetLng");
-
-                    b.Property<string>("TargetStopName");
+                    b.Property<int?>("TargetStopId");
 
                     b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StartStopId");
+
+                    b.HasIndex("TargetStopId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("TramWars.Domain.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("StopId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StopId");
+
+                    b.ToTable("Service");
+                });
+
+            modelBuilder.Entity("TramWars.Domain.Stop", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<float>("Latitude");
+
+                    b.Property<float>("Longitude");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Stops");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<int>", b =>
@@ -359,9 +388,24 @@ namespace TramWars.Migrations
 
             modelBuilder.Entity("TramWars.Domain.Route", b =>
                 {
+                    b.HasOne("TramWars.Domain.Stop", "StartStop")
+                        .WithMany()
+                        .HasForeignKey("StartStopId");
+
+                    b.HasOne("TramWars.Domain.Stop", "TargetStop")
+                        .WithMany()
+                        .HasForeignKey("TargetStopId");
+
                     b.HasOne("TramWars.Domain.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("TramWars.Domain.Service", b =>
+                {
+                    b.HasOne("TramWars.Domain.Stop")
+                        .WithMany("Lines")
+                        .HasForeignKey("StopId");
                 });
         }
     }

@@ -1,11 +1,10 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TramWars.Domain;
 using TramWars.Dto;
 using TramWars.Persistence;
-using TramWars.Persistence.Repositories.Interfaces;
+using TramWars.Queries;
 
 namespace TramWars.Controllers
 {
@@ -13,21 +12,18 @@ namespace TramWars.Controllers
     [Route("routes")]
     public class RouteController : Controller
     {
-        private readonly IRouteRepository _routeRepository;
         private readonly IUsersFacade _users;
-        private readonly IStopRepository _stopRepository;
-        private readonly Func<IUnitOfWork> _uowFactory;
+        private readonly AppDbContext _dbContext;
+        private readonly FindStopQuery _findStopQuery;
 
         public RouteController(
-            IRouteRepository routeRepository,
+            FindStopQuery findStopQuery,
             IUsersFacade users,
-            IStopRepository stopRepository, 
-            Func<IUnitOfWork> uowFactory)
+            AppDbContext dbContext)
         {
+            _findStopQuery = findStopQuery;
             _users = users;
-            _routeRepository = routeRepository;
-            _stopRepository = stopRepository;
-            _uowFactory = uowFactory;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -36,13 +32,13 @@ namespace TramWars.Controllers
             var user = await _users.GetUserAsync(User);
             var startStopDto = stops[0];
             var targetStopDto = stops[1];
-            var startStop = _stopRepository.GetClosestStopNamed(startStopDto.Name, startStopDto.Lat, startStopDto.Lon);
-            var targetStop = _stopRepository.GetClosestStopNamed(targetStopDto.Name, targetStopDto.Lat, targetStopDto.Lon);
+            // TODO: it can't work like this - stops need actual ids
+            // and it has to be two specific stops, not just similarly named
+            var startStop = _findStopQuery.Find(startStopDto.Name, startStopDto.Lat, startStopDto.Lon);
+            var targetStop = _findStopQuery.Find(targetStopDto.Name, targetStopDto.Lat, targetStopDto.Lon);
             var route = new Route(user, targetStop, startStop);
-            _uowFactory.Do(() => 
-            {
-                _routeRepository.AddRoute(route);
-            });
+            _dbContext.Routes.Add(route);
+            _dbContext.SaveChanges();
             var dto = new RouteDto { Id = route.Id };
             return Created($"routes/{route.Id}", dto);
         }

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace TramWars.Tests.Domain
 {
-    public class StopTests
+    public class StopTest
     {
         [Fact]
         public void CalculatesDistance() 

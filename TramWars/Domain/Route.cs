@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace TramWars.Domain
 {
-    public class Route
+    public sealed class Route
     {
         public Route(AppUser user, Stop targetStop, Stop startStop) : this()
         {
             User = user;
-            SetTargetStop(targetStop);
-            SetStartStop(startStop);
+            TargetStop = targetStop;
+            StartStop = startStop;
         }
 
         private Route() 
@@ -17,25 +17,18 @@ namespace TramWars.Domain
             Positions = new List<Position>();
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         public int Id { get; private set; }
 
         public AppUser User { get; private set; }
-
-        public float TargetLat { get; private set; }
-
-        public float TargetLng { get; private set; }
-
-        public string TargetStopName { get; private set; }
         
-        public float StartLat { get; private set; }
-
-        public float StartLng { get; private set; }
-
-        public string StartStopName { get; private set; }
-
         public bool IsClosed { get; private set; }
 
-        public virtual ICollection<Position> Positions { get; set; }
+        public Stop StartStop { get; private set; }
+
+        public Stop TargetStop { get; private set; }
+
+        public ICollection<Position> Positions { get; private set; }
 
         public bool IsFinished()
         {
@@ -46,7 +39,7 @@ namespace TramWars.Domain
 
             var currentPos = Positions.Last();
             var coords = new Coords(currentPos.Lat, currentPos.Lng);
-            var targetCoords = new Coords(TargetLat, TargetLng);
+            var targetCoords = TargetStop.GetCoords();
             return coords.AreCloseTo(targetCoords);
         }
 
@@ -57,30 +50,6 @@ namespace TramWars.Domain
             {
                 Positions.Add(position);
             }
-        }
-
-        public void SetTargetStop(Stop stop) 
-        {
-            TargetStopName = stop.Name;
-            TargetLat = stop.Latitude;
-            TargetLng = stop.Longitude;
-        }
-        
-        public void SetStartStop(Stop stop) 
-        {
-            StartStopName = stop.Name;
-            StartLat = stop.Latitude;
-            StartLng = stop.Longitude;
-        }
-
-        public Stop GetTargetStop()
-        {
-            return new Stop(TargetStopName, TargetLat, TargetLng);
-        }
-        
-        public Stop GetStartStop()
-        {
-            return new Stop(StartStopName, StartLat, StartLng);
         }
 
         public void Close() 

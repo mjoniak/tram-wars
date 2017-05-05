@@ -4,7 +4,7 @@ using Xunit;
 
 namespace TramWars.Tests.Domain
 {
-    public class ObjectiveGeneratorTests
+    public class ObjectiveGeneratorTest
     {
         [Fact]
         public void WhenNoStopsThenNoObjectives() 
@@ -19,9 +19,9 @@ namespace TramWars.Tests.Domain
         public void WhenTwoStopsThenOnlyObjectiveIsBetweenThem()
         {
             var startStop = new Stop("Start Stop", 10.0f, 20.0f);
-            startStop.AddLine("1");
+            startStop.AddService(new Service("1"));
             var endStop = new Stop("End Stop", 15.0f, 20.0f);
-            endStop.AddLine("1");
+            endStop.AddService(new Service("1"));
             var service = new ObjectiveGenerator(new[] { startStop, endStop });
             var objectives = service.Generate(startStop);
             Assert.Collection(objectives, x => Assert.Equal(endStop, x.EndStop));
@@ -33,9 +33,9 @@ namespace TramWars.Tests.Domain
             var stops = Enumerable.Range(0, 100).Select(i => 
             {
                 var stop = new Stop("Stop" + i, 0.0f + i, 0.0f);
-                stop.AddLine("1");
+                stop.AddService(new Service("1"));
                 return stop;
-            });
+            }).ToList();
             var service = new ObjectiveGenerator(stops);
             var objectives = service.Generate(stops.First());
             Assert.Equal(10, objectives.Count());
@@ -45,9 +45,9 @@ namespace TramWars.Tests.Domain
         public void WhenNoConnectionBetweenStopsThenNoResults()
         {
             var startStop = new Stop("Start Stop", 10.0f, 20.0f);
-            startStop.AddLine("1");
+            startStop.AddService(new Service("1"));
             var endStop = new Stop("End Stop", 15.0f, 20.0f);
-            endStop.AddLine("2");
+            endStop.AddService(new Service("2"));
             var service = new ObjectiveGenerator(new[] { startStop, endStop });
             var objectives = service.Generate(startStop);
             Assert.Empty(objectives);

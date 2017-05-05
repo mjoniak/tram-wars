@@ -3,7 +3,7 @@ using Xunit;
 
 namespace TramWars.Tests.Domain
 {
-    public class ObjectiveTests
+    public class ObjectiveTest
     {
         [Fact]
         public void WhenTwoSameStopsThenZeroPoints() 

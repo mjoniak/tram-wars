@@ -35,8 +35,8 @@ namespace TramWars.Domain
 
         private Stop FindTargetStop(Stop startStop, HashSet<Stop> visitedStops)
         {
-            int seed = (DateTime.Today - DateTime.MinValue).Seconds;
-            var rand = new Random(seed);
+            var seed = (DateTime.Today - DateTime.MinValue).TotalSeconds;
+            var rand = new Random((int)seed);
 
             var stop = _stops
                 .Where(x => x != startStop && x.HasCommonLinesWith(startStop) && !visitedStops.Contains(x))
