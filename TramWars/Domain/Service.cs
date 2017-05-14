@@ -10,5 +10,9 @@ namespace TramWars.Domain
         {
             Name = name;
         }
+
+        private Service()
+        {
+        }
     }
 }

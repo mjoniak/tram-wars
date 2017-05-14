@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TramWars.Domain;
+using TramWars.Queries;
 
 namespace TramWars.Startup
 {
@@ -29,7 +30,7 @@ namespace TramWars.Startup
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
-                Authority = Config.ListenUrl,
+                Authority = Config.JwtAuthority,
                 Audience = "resource-server", //TODO: make this a const
                 RequireHttpsMetadata = false, //TODO: fix that
                 TokenValidationParameters = new TokenValidationParameters
@@ -47,7 +48,6 @@ namespace TramWars.Startup
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            //TODO: figure a way to store production connection string in a secure way
             services.AddDbContext<AppDbContext>(o =>
             {
                 o.UseNpgsql(Config.ConnectionString);
@@ -80,6 +80,9 @@ namespace TramWars.Startup
             services.AddCors(o =>
                 o.AddPolicy("CorsPolicy", builder => 
                     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+            services.AddTransient<IUsersFacade, UsersFacade>();
+            services.AddTransient<FindStopQuery>();
         }
     }
 }

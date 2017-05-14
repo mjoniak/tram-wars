@@ -6,8 +6,6 @@ namespace TramWars.Startup
     {
         private static IConfigurationRoot _configuration;
 
-        static Config() => Init(isDevelopment: false);
-
         public static void Init(bool isDevelopment)
         {
             var builder = new ConfigurationBuilder();
@@ -21,6 +19,6 @@ namespace TramWars.Startup
 
         public static string ConnectionString => _configuration[nameof(ConnectionString)];
         public static string TestConnectionString => _configuration[nameof(TestConnectionString)];
-        public static string ListenUrl => _configuration[nameof(ListenUrl)];
+        public static string JwtAuthority => _configuration[nameof(JwtAuthority)];
     }   
 }

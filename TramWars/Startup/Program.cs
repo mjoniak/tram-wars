@@ -7,7 +7,7 @@ namespace TramWars.Startup
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseUrls(Config.ListenUrl, "http://localhost:5000")
+                .UseUrls("http://0.0.0.0:5000")
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();

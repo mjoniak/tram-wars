@@ -8,5 +8,7 @@ namespace TramWars.Dto
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Password { get; set; }
+
+        public int Score { get; set; }
     }
 }

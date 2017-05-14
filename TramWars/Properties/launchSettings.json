@@ -17,6 +17,12 @@
     },
     "TramWars": {
       "commandName": "Project"
+    },
+    "TramWars-Dev": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

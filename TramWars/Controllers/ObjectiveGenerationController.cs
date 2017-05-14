@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TramWars.Domain;
 using TramWars.Dto;
 using TramWars.Persistence;
@@ -23,7 +24,7 @@ namespace TramWars.Controllers
         [Route("stops/{stopName},{lat},{lon}/objectives")]
         public ActionResult Get(string stopName, float lat, float lon)
         {
-            var stops = _dbContext.Stops.ToList();
+            var stops = _dbContext.Stops.Include(x => x.Lines).ToList();
             var startStop = _findStopQuery.Find(stopName, lat, lon);
             var generator = new ObjectiveGenerator(stops);
             var objectives = generator.Generate(startStop);
