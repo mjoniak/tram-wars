@@ -24,6 +24,8 @@ namespace TramWars.Controllers
             // TODO: check if authorized to access route
             var route = await _dbContext.Routes
                 .Include(x => x.Positions)
+                .Include(x => x.StartStop)
+                .Include(x => x.TargetStop)
                 .Include(x => x.User)
                 .SingleAsync(x => x.Id == routeId);
             route.AddPosition(position);
